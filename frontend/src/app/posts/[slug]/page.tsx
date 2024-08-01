@@ -49,7 +49,7 @@ export function generateMetadata({ params }: Params): Metadata {
     return notFound();
   }
 
-  const title = `${post.title} | Next.js Blog Example `;
+  const title = `${post.title} | Schola `;
 
   return {
     title,
