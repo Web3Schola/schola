@@ -1,13 +1,13 @@
 ---
 title: "Introduction to Schola"
 excerpt: "Schola is committed to creating a world where learning is accessible to everyone, motivating and rewarding, and a catalyst for both personal and professional growth."
-coverImage: "/assets/blog/hello-world/cover.jpg"
+coverImage: "/assets/blog/intro/cover.jpg"
 date: "2024-07-31T17:57:00.322Z"
 author:
   name: ATV
-  picture: "/assets/blog/authors/atv.jpeg"
+  picture: "/assets/blog/authors/avatar-1.jpeg"
 ogImage:
-  url: "/assets/blog/hello-world/cover.jpg"
+  url: "/assets/blog/intro/cover.jpg"
 ---
 
 ## SCHOLA

@@ -1,13 +1,13 @@
 ---
 title: "MVP"
-excerpt: ""
-coverImage: "/assets/blog/dynamic-routing/cover.jpg"
+excerpt: "We developed a smart contract on the VARA network to create and manage interactive trivia games on the blockchain. Users can create trivia games with questions, correct answers, and predetermined prizes. Players participate by answering the questions, and if they answer correctly, they receive the prize."
+coverImage: "/assets/blog/mvp/cover.jpg"
 date: "2020-03-16T05:35:07.322Z"
 author:
   name: D9J9V
-  picture: "/assets/blog/authors/jj.jpeg"
+  picture: "/assets/blog/authors/d9j9v.jpg"
 ogImage:
-  url: "/assets/blog/dynamic-routing/cover.jpg"
+  url: "/assets/blog/mvp/cover.jpg"
 ---
 
 # Trivia proposal implemented on VARA network
