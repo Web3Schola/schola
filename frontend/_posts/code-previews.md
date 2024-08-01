@@ -1,6 +1,6 @@
 ---
-title: "Buenas tardes "
-excerpt: "hola."
+title: "Code previews"
+excerpt: "Contracts progress"
 coverImage: "/assets/blog/preview/cover.jpg"
 date: "2020-03-16T05:35:07.322Z"
 author:

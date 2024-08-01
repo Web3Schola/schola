@@ -1,13 +1,13 @@
 ---
-title: "Schola"
-excerpt: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. At imperdiet dui accumsan sit amet nulla facilities morbi tempus."
-coverImage: "/assets/blog/dynamic-routing/cover.jpg"
-date: "2020-03-16T05:35:07.322Z"
+title: "Introduction to Schola"
+excerpt: "Schola is committed to creating a world where learning is accessible to everyone, motivating and rewarding, and a catalyst for both personal and professional growth."
+coverImage: "/assets/blog/hello-world/cover.jpg"
+date: "2024-07-31T17:57:00.322Z"
 author:
-  name: D9J9V
-  picture: "/assets/blog/authors/jj.jpeg"
+  name: ATV
+  picture: "/assets/blog/authors/atv.jpeg"
 ogImage:
-  url: "/assets/blog/dynamic-routing/cover.jpg"
+  url: "/assets/blog/hello-world/cover.jpg"
 ---
 
 ## SCHOLA
