@@ -1,5 +1,4 @@
 import Footer from "@/app/_components/footer";
-import { HOME_OG_IMAGE_URL } from "@/lib/constants";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import cn from "classnames";
@@ -10,10 +9,10 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: `Next.js Blog Example with `,
-  description: `A statically generated blog example using Next.js and.`,
+  title: `Schola `,
+  description: `A modular framework for continous education built on VARA network.`,
   openGraph: {
-    images: [HOME_OG_IMAGE_URL],
+    images: ["/assets/blog/code-previews/cover.jpg"],
   },
 };
 
