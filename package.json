@@ -1,0 +1,35 @@
+{
+  "name": "sv",
+  "version": "0.0.1",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/contracts",
+      "packages/nextjs"
+    ]
+  },
+  "scripts": {
+    "format": "yarn next:format",
+    "start": "yarn workspace @sv/nextjs dev",
+    "next:lint": "yarn workspace @sv/nextjs lint",
+    "next:format": "yarn workspace @sv/nextjs format",
+    "next:check-types": "yarn workspace @sv/nextjs check-types",
+    "next:build": "yarn workspace @sv/nextjs build",
+    "next:serve": "yarn workspace @sv/nextjs serve",
+    "postinstall": "husky install",
+    "precommit": "lint-staged",
+    "vercel": "yarn workspace @sv/nextjs vercel",
+    "vercel:yolo": "yarn workspace @sv/nextjs vercel:yolo"
+  },
+  "packageManager": "yarn@3.2.3",
+  "devDependencies": {
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3"
+  },
+  "engines": {
+    "node": ">=18.17.0"
+  },
+  "dependencies": {
+    "yarn": "^1.22.22"
+  }
+}
