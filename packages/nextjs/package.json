@@ -1,9 +1,12 @@
 {
+  "name": "@sv/nextjs",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "classnames": "^2.5.1",
