@@ -21,13 +21,9 @@
     "vercel": "yarn workspace @sv/nextjs vercel",
     "vercel:yolo": "yarn workspace @sv/nextjs vercel:yolo"
   },
-  "packageManager": "yarn@3.2.3",
   "devDependencies": {
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3"
-  },
-  "engines": {
-    "node": ">=18.17.0"
   },
   "dependencies": {
     "yarn": "^1.22.22"
