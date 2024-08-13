@@ -1,13 +1,10 @@
-"use ";
-import React from "react";
-
-const Navbar = () => {
+export default function Navbar() {
   return (
-    <section className="flex bg-transparent h-20 items-center  gap-5 px-5 mb">
+    <div className="flex h-20 items-center gap-5 px-5">
       <a href="/">
         <img src="" alt="" className="h-20 " />
       </a>
-      <div className="flex-none  ">
+      <div className="flex-none">
         <button className="btn btn-square btn-ghost">
           <svg
             xmlns="/app/page.tsx"
@@ -56,8 +53,6 @@ const Navbar = () => {
           conect wallet
         </button>
       </div>
-    </section>
+    </div>
   );
-};
-
-export default Navbar;
+}
