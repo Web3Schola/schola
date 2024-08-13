@@ -92,13 +92,16 @@ const Switch = () => {
   );
 };
 
-const Script = memo(() => (
-  <script
-    dangerouslySetInnerHTML={{
-      __html: `(${NoFOUCScript.toString()})('${STORAGE_KEY}')`,
-    }}
-  />
-));
+const Script = memo(function ThemeSwitcherScript() {
+  // Function name
+  return (
+    <script
+      dangerouslySetInnerHTML={{
+        __html: `(${NoFOUCScript.toString()})('${STORAGE_KEY}')`,
+      }}
+    />
+  );
+});
 
 /**
  * This component wich applies classes and transitions.

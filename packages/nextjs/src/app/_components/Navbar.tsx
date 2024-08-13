@@ -1,9 +1,7 @@
 export default function Navbar() {
   return (
     <div className="flex h-20 items-center gap-5 px-5">
-      <a href="/">
-        <img src="" alt="" className="h-20 " />
-      </a>
+      <a href="/"></a>
       <div className="flex-none">
         <button className="btn btn-square btn-ghost">
           <svg

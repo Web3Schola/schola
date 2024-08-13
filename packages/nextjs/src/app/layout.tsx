@@ -1,4 +1,4 @@
-import Navbar from "@/app/_components/navbar";
+import Navbar from "./_components/Navbar";
 import Footer from "@/app/_components/footer";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
