@@ -13,10 +13,10 @@ const questions = [
 
 export default function Trivia() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [selectedAnswer, setSelectedAnswer] = useState("");
   const [showResult, setShowResult] = useState(false);
 
-  const handleAnswerClick = (answer: string | SetStateAction<null>) => {
+  const handleAnswerClick = (answer: string) => {
     setSelectedAnswer(answer);
   };
 
@@ -28,7 +28,7 @@ export default function Trivia() {
       console.log("Respuesta incorrecta");
     }
 
-    setSelectedAnswer(null);
+    setSelectedAnswer("");
     setCurrentQuestion(currentQuestion + 1);
 
     if (currentQuestion === questions.length - 1) {
