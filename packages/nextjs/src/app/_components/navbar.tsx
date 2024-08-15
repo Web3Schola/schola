@@ -28,7 +28,7 @@ export default function Navbar() {
             <a href="">Demo</a>
           </li>
           <li>
-            <a href="">Get stared</a>
+            <a href="">Get started</a>
           </li>
         </ul>
       </div>
@@ -48,7 +48,7 @@ export default function Navbar() {
               d="M12 2a10 10 0 1 0 0 20a10 10 0 0 0 0-20z"
             />
           </svg>
-          conect wallet
+          connect wallet
         </button>
       </div>
     </div>
