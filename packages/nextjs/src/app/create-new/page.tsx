@@ -31,7 +31,7 @@ export default function CrearPregunta() {
   };
 
   return (
-    <div className="container mx-auto p-8">
+    <div className="container mx-auto p-8 ">
       <h1 className="text-3xl font-bold mb-6">Crear Nueva Pregunta</h1>
 
       <form
@@ -101,11 +101,32 @@ export default function CrearPregunta() {
 
         <div className="flex items-center justify-between">
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="submit"
+            className="btn"
+            onClick={() => {
+              const modalElement = document.getElementById(
+                "my_modal_1"
+              ) as HTMLDialogElement;
+              if (modalElement) {
+                modalElement.showModal();
+              } else {
+                console.error("Modal element not found!"); // O algún otro manejo de error apropiado
+              }
+            }}
           >
-            Crear Pregunta
+            Create
           </button>
+
+          <dialog id="my_modal_1" className="modal">
+            <div className="modal-box">
+              <h3 className="font-bold text-lg">Hello!</h3>
+              <p className="py-4">Trivia ID</p>
+              <div className="modal-action">
+                <form method="dialog">
+                  <button className="btn">Close</button>
+                </form>
+              </div>
+            </div>
+          </dialog>
         </div>
       </form>
     </div>
