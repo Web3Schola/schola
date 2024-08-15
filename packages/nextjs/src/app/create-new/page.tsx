@@ -6,23 +6,23 @@ import { useState } from "react";
 export default function CrearPregunta() {
   const [pregunta, setPregunta] = useState("");
   const [opciones, setOpciones] = useState(["", "", "", ""]);
-  const [respuestaCorrecta, setRespuestaCorrecta] = useState(null);
+  const [respuestaCorrecta, setRespuestaCorrecta] = useState<string>("");
 
-  const handlePreguntaChange = (event) => {
+  const handlePreguntaChange = (event: any) => {
     setPregunta(event.target.value);
   };
 
-  const handleOpcionChange = (index, event) => {
+  const handleOpcionChange = (index: number, event: any) => {
     const nuevasOpciones = [...opciones];
     nuevasOpciones[index] = event.target.value;
     setOpciones(nuevasOpciones);
   };
 
-  const handleRespuestaCorrectaChange = (event) => {
+  const handleRespuestaCorrectaChange = (event: any) => {
     setRespuestaCorrecta(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: any) => {
     event.preventDefault();
     // Aquí puedes manejar la lógica para guardar la pregunta y las respuestas
     console.log("Pregunta:", pregunta);
