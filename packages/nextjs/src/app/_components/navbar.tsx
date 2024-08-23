@@ -1,3 +1,14 @@
+"use client";
+import dynamic from "next/dynamic";
+
+// Use dynamic import with correct syntax
+const WalletComponent = dynamic(
+  () => import("./wallet").then((mod) => mod.Wallet),
+  {
+    ssr: false, // This prevents server-side rendering
+  },
+);
+
 export default function Navbar() {
   return (
     <div className="flex h-20 items-center gap-5 px-5">
@@ -33,7 +44,8 @@ export default function Navbar() {
         </ul>
       </div>
       <div className="flex-none  ">
-        <button className="btn btn-outline bg-slate-400 rounded gap-x-10">
+        <WalletComponent />
+        {/*<button className="btn btn-outline bg-slate-400 rounded gap-x-10">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"
@@ -49,7 +61,7 @@ export default function Navbar() {
             />
           </svg>
           connect wallet
-        </button>
+        </button>*/}
       </div>
     </div>
   );
