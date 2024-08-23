@@ -1,6 +1,6 @@
 import React from "react";
 
-export const Card = () => {
+export function Card() {
   return (
     <div className="grid grid-cols-2 mb-28">
       <div className="card bg-gray-500 w-96 shadow-xl">
@@ -35,4 +35,4 @@ export const Card = () => {
       </div>
     </div>
   );
-};
+}
