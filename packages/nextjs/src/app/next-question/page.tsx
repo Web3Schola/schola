@@ -32,10 +32,7 @@ export default function CrearPregunta() {
 
   return (
     <div className="container mx-auto p-8 ">
-      <div className="grid grid-cols-2">
-        <h1 className="text-3xl font-bold mb-6">Create new question</h1>
-        <button className="btn ustify-self-end">Fund a trivia game</button>
-      </div>
+      <h1 className="text-3xl font-bold mb-6">Create new question</h1>
 
       <form
         onSubmit={handleSubmit}
