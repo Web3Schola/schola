@@ -1,3 +1,2 @@
-import { Wallet, WalletModal } from './components';
-
-export { Wallet, WalletModal };
+export { Wallet } from "./wallet";
+export { WalletModal } from "./walletModal";

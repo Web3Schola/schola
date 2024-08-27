@@ -1,5 +1,6 @@
 const cspHeader = `
     default-src 'self';
+    connect-src 'self' wss://testnet.vara.network ws: wss: http: https:;
     script-src 'self' 'unsafe-eval' 'unsafe-inline';
     style-src 'self' 'unsafe-inline';
     img-src 'self' blob: data:;
