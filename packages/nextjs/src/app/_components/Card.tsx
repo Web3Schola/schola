@@ -1,11 +1,18 @@
 import React from "react";
+import Image from "next/image";
 
 export function Card() {
   return (
     <div className="grid grid-cols-2 mb-28">
       <div className="card bg-gray-500 w-96 shadow-xl">
         <figure className="px-10 pt-10">
-          <img src="/favicon/trivia.jpg" alt="Shoes" className="rounded-xl" />
+          <Image
+            src="/favicon/trivia.jpg"
+            alt="Shoes"
+            className="rounded-xl"
+            width={300}
+            height={200}
+          />
         </figure>
         <div className="card-body items-center text-center">
           <a href="/create-new">
@@ -18,10 +25,12 @@ export function Card() {
       <div>
         <div className="card  bg-gray-500 w-96 shadow-xl">
           <figure className="px-10 pt-10">
-            <img
+            <Image
               src="/favicon/trivia-1.jpg"
               alt="Shoes"
               className="rounded-xl"
+              width={300}
+              height={200}
             />
           </figure>
           <div className="card-body items-center text-center">
