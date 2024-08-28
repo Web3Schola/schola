@@ -1,7 +1,6 @@
 [package]
 name = "schola-trivia-factory"
 version = "0.1.0"
-authors = ["Your Name"]
 edition = "2021"
 
 [dependencies]
@@ -18,3 +17,6 @@ gmeta = { git = "https://github.com/gear-tech/gear.git", tag = "v1.1.1" }
 
 [build-dependencies]
 gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", tag = "v1.1.1" }
+
+[dev-dependencies]
+gtest = { git = "https://github.com/gear-tech/gear.git", tag = "v1.1.1" }
