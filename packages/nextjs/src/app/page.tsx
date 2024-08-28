@@ -2,7 +2,7 @@ import Container from "@/app/_components/container";
 import { HeroPost } from "@/app/_components/hero-post";
 import { Intro } from "@/app/_components/intro";
 import { MoreStories } from "@/app/_components/more-stories";
-import { Card } from "./_components/card";
+import { Card } from "@/app/_components/card";
 import { getAllPosts } from "@/lib/api";
 
 export default function Index() {
@@ -24,8 +24,8 @@ export default function Index() {
           slug={heroPost.slug}
           excerpt={heroPost.excerpt}
         />
-        {morePosts.length > 0 && <MoreStories posts={morePosts} />}
         <Card />
+        {morePosts.length > 0 && <MoreStories posts={morePosts} />}
       </Container>
     </main>
   );
