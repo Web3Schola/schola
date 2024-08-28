@@ -16,11 +16,11 @@ export function WalletModal({ onClose }: Props) {
     setWalletId,
     resetWalletId,
     getWalletAccounts,
-    saveWallet,
-    removeWallet,
     account,
     wallets,
     isAccountReady,
+    login,
+    logout,
   } = useWallet();
 
   const handleWalletClick = (id: WalletId) => {
@@ -28,16 +28,12 @@ export function WalletModal({ onClose }: Props) {
   };
 
   const handleAccountClick = (selectedAccount: Account) => {
-    // Note: We don't have a separate login function now, so we might need to handle this differently
-    // For now, let's just set the walletId and close the modal
-    setWalletId(selectedAccount.meta.source as WalletId);
-    saveWallet();
+    login(selectedAccount);
     onClose();
   };
 
   const handleLogout = () => {
-    // Note: We don't have a separate logout function now, so we'll just remove the wallet
-    removeWallet();
+    logout();
     resetWalletId();
     onClose();
   };
