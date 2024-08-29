@@ -1,0 +1,15 @@
+[package]
+name = "trivia-factory-app"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+sails-rs = "0.4.0"
+gstd = { version = "1.5.0", features = ["debug"] }
+codec = { package = "parity-scale-codec", version = "3.4.0", default-features = false, features = [
+    "derive",
+] }
+gmeta = { version = "1.5.0" }
+scale-info = { version = "2.0", default-features = false, features = [
+    "derive",
+] }

@@ -1,5 +1,5 @@
 # 🏗 Scafold-Vara2
-
+cargo build --release --target wasm32-unknown-unknown
 <h4 align="center">
   <a href="https://docs.scaffoldeth.io">Documentation</a> |
   <a href="https://scaffoldeth.io">Website</a>
