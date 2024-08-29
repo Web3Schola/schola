@@ -1,0 +1,23 @@
+{
+  "name": "@sv/vara-factory",
+  "version": "0.1.0",
+  "scripts": {
+    "build": "cargo build --release",
+    "test": "cargo test",
+    "clippy": "cargo clippy -- -D warnings",
+    "fmt": "cargo fmt --all -- --check",
+    "run-example": "cargo run --example",
+    "generate-js-client": "sails-js generate ./target/wasm32-unknown-unknown/release/trivia_factory.idl -o ../nextjs/src/contracts -n TriviaFactory"
+  },
+  "dependencies": {
+    "@gear-js/api": "^0.38.1",
+    "@polkadot/api": "12.0.1",
+    "@polkadot/types": "^11.0.1",
+    "@polkadot/util": "^13.0.2",
+    "@polkadot/wasm-crypto": "7.3.2",
+    "@polkadot/wasm-util": "^7.3.2",
+    "@polkadot/x-randomvalues": "^13.0.2",
+    "rxjs": "7.8.1",
+    "sails-js": "^0.1.9"
+  }
+}
