@@ -19,7 +19,13 @@
     "postinstall": "husky install",
     "precommit": "lint-staged",
     "vercel": "yarn workspace @sv/nextjs vercel",
-    "vercel:yolo": "yarn workspace @sv/nextjs vercel:yolo"
+    "vercel:yolo": "yarn workspace @sv/nextjs vercel:yolo",
+    "factory:build": "yarn workspace @sv/vara-factory build",
+    "factory:test": "yarn workspace @sv/vara-factory test",
+    "factory:clippy": "yarn workspace @sv/vara-factory clippy",
+    "factory:fmt": "yarn workspace @sv/vara-factory fmt",
+    "factory:create-example": "yarn workspace @sv/vara-factory run-example create_trivia",
+    "factory:play-example": "yarn workspace @sv/vara-factory run-example play_trivia"
   },
   "devDependencies": {
     "husky": "^8.0.1",
