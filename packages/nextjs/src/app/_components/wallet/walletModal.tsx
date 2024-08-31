@@ -1,14 +1,20 @@
+import { Signer } from "@polkadot/types/types";
 import { Account, useAccount } from "@gear-js/react-hooks";
-import { decodeAddress } from "@gear-js/api";
+import { decodeAddress, HexString } from "@gear-js/api";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
-import { ApiPromise } from "@polkadot/api";
+//import { ApiPromise } from "@polkadot/api";
 import { web3FromSource } from "@polkadot/extension-dapp";
 
 type Props = {
   onClose: () => void;
   accounts: InjectedAccountWithMeta[];
 };
-
+type CustomSigner = Omit<Signer, "update"> & {
+  update?: (id: number, status: any) => void;
+};
+type CustomAccount = Omit<Account, "signer"> & {
+  signer: CustomSigner;
+};
 export function WalletModal({ onClose, accounts }: Props) {
   const { login } = useAccount();
 
@@ -17,13 +23,13 @@ export function WalletModal({ onClose, accounts }: Props) {
       const { meta } = account;
       const injector = await web3FromSource(meta.source);
 
-      const gearAccount: Account = {
+      const gearAccount: CustomAccount = {
         ...account, // This spreads all properties from InjectedAccountWithMeta
-        decodedAddress: decodeAddress(account.address),
-        signer: injector.signer,
+        decodedAddress: decodeAddress(account.address) as HexString,
+        signer: injector.signer as CustomSigner,
       };
 
-      login(gearAccount);
+      login(gearAccount as unknown as Account);
       onClose();
     } catch (error) {
       console.error("Error selecting account:", error);
