@@ -1,112 +1,99 @@
-// pages/crear-pregunta.tsx
 "use client";
 
 import { useState } from "react";
 
 export default function CrearPregunta() {
-  const [pregunta, setPregunta] = useState("");
-  const [opciones, setOpciones] = useState(["", "", "", ""]);
-  const [respuestaCorrecta, setRespuestaCorrecta] = useState<string>("");
+  const [preguntas, setPreguntas] = useState([
+    { pregunta: "", respuestaCorrecta: "" }, // Initial question
+  ]);
 
-  const handlePreguntaChange = (event: any) => {
-    setPregunta(event.target.value);
+  const handlePreguntaChange = (index: number, event: any) => {
+    const nuevasPreguntas = [...preguntas];
+    nuevasPreguntas[index].pregunta = event.target.value;
+    setPreguntas(nuevasPreguntas);
   };
 
-  const handleOpcionChange = (index: number, event: any) => {
-    const nuevasOpciones = [...opciones];
-    nuevasOpciones[index] = event.target.value;
-    setOpciones(nuevasOpciones);
+  const handleRespuestaCorrectaChange = (index: number, event: any) => {
+    const nuevasPreguntas = [...preguntas];
+    nuevasPreguntas[index].respuestaCorrecta = event.target.value;
+    setPreguntas(nuevasPreguntas);
   };
 
-  const handleRespuestaCorrectaChange = (event: any) => {
-    setRespuestaCorrecta(event.target.value);
+  const handleAddQuestion = () => {
+    setPreguntas([...preguntas, { pregunta: "", respuestaCorrecta: "" }]);
   };
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    // Aquí puedes manejar la lógica para guardar la pregunta y las respuestas
-    console.log("Pregunta:", pregunta);
-    console.log("Opciones:", opciones);
-    console.log("Respuesta correcta:", respuestaCorrecta);
+    // Aquí puedes manejar la lógica para guardar todas las preguntas y las respuestas
+    console.log("Preguntas:", preguntas);
   };
 
   return (
     <div className="container mx-auto p-8 ">
-      <div className="grid grid-cols-2">
-        <h1 className="text-3xl font-bold mb-6">Create new question</h1>
-        <button className="btn ustify-self-end">Fund a trivia game</button>
+      <div className="container mx-auto p-8 ">
+        <div className="grid grid-cols-2">
+          <h1 className="text-3xl font-bold mb-6">Create new question</h1>
+          <button className="btn ustify-self-end">Fund a trivia game</button>
+        </div>
       </div>
 
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
       >
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="pregunta"
-          >
-            Question:
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="pregunta"
-            type="text"
-            placeholder="Escribe tu pregunta aquí"
-            value={pregunta}
-            onChange={handlePreguntaChange}
-            required
-          />
-        </div>
+        {preguntas.map((preguntaObj, index) => (
+          <div key={index}>
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor={`pregunta-${index}`}
+              >
+                {" "}
+                  Question {index + 1}:
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id={`pregunta-${index}`}
+                type="text"
+                placeholder="Escribe tu pregunta aquí"
+                value={preguntaObj.pregunta}
+                onChange={(event) => handlePreguntaChange(index, event)}
+                required
+              />
+            </div>
 
-        {opciones.map((opcion, index) => (
-          <div key={index} className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor={`opcion-${index}`}
-            >
-              Option {index + 1}:
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id={`opcion-${index}`}
-              type="text"
-              placeholder={`Escribe la opción ${index + 1}`}
-              value={opcion}
-              onChange={(event) => handleOpcionChange(index, event)}
-              required
-            />
+            <div className="mb-6">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor={`respuestaCorrecta-${index}`}
+              >
+                Correct answer {index + 1}:
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id={`respuestaCorrecta-${index}`}
+                type="text"
+                placeholder="Escribe la respuesta correcta"
+                value={preguntaObj.respuestaCorrecta}
+                onChange={(event) =>
+                  handleRespuestaCorrectaChange(index, event)
+                }
+                required
+              />
+            </div>
           </div>
         ))}
 
-        <div className="mb-6">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="respuestaCorrecta"
-          >
-            Correct answer:
-          </label>
-          <select
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="respuestaCorrecta"
-            value={respuestaCorrecta}
-            onChange={handleRespuestaCorrectaChange}
-            required
-          >
-            <option value="">Select correct answer</option>
-            {opciones.map((opcion, index) => (
-              <option key={index} value={opcion}>
-                Option {index + 1}
-              </option>
-            ))}
-          </select>
-        </div>
-
         <div className="flex items-center justify-between">
           <div>
-            <a href="/next-question/">
-              <button className="btn btn-lg mt-10 btn-glass mb-5">Next</button>
-            </a>
+            <button
+              type="button" // Important: prevent form submission
+              className="btn btn-lg mt-10 btn-glass mb-5"
+              onClick={handleAddQuestion}
+            >
+              Next
+            </button>
           </div>
           <button
             className="btn  btn-lg mt-10 btn-glass mb-5"
@@ -117,7 +104,7 @@ export default function CrearPregunta() {
               if (modalElement) {
                 modalElement.showModal();
               } else {
-                console.error("Modal element not found!"); // O algún otro manejo de error apropiado
+                console.error("Modal element not found!");
               }
             }}
           >
