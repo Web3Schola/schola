@@ -1,109 +1,59 @@
-import { useAlert } from "@gear-js/react-hooks";
-import { WALLETS } from "./consts";
-import { useWallet } from "./hooks";
-import { WalletId } from "./types";
-import { Account } from "@gear-js/react-hooks";
+import { useAccount } from "@gear-js/react-hooks";
+import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
+import { decodeAddress } from "@gear-js/api";
+import { web3FromSource } from "@polkadot/extension-dapp";
 
 type Props = {
   onClose: () => void;
+  accounts: InjectedAccountWithMeta[];
 };
 
-export function WalletModal({ onClose }: Props) {
-  const alert = useAlert();
-  const {
-    wallet,
-    walletAccounts,
-    setWalletId,
-    resetWalletId,
-    getWalletAccounts,
-    account,
-    wallets,
-    isAccountReady,
-    login,
-    logout,
-  } = useWallet();
+export function WalletModal({ onClose, accounts }: Props) {
+  const { login } = useAccount();
 
-  const handleWalletClick = (id: WalletId) => {
-    setWalletId(id);
+  const handleAccountSelection = async (account: InjectedAccountWithMeta) => {
+    try {
+      const { signer } = await web3FromSource(account.meta.source);
+
+      if (!signer) {
+        throw new Error("No signer found");
+      }
+
+      const gearAccount = {
+        address: account.address,
+        meta: account.meta,
+        type: account.type,
+        decodedAddress: decodeAddress(account.address),
+        signer,
+      };
+
+      login(gearAccount);
+      onClose();
+    } catch (error) {
+      console.error("Error selecting account:", error);
+      // Aquí podrías mostrar un mensaje de error al usuario
+    }
   };
-
-  const handleAccountClick = (selectedAccount: Account) => {
-    login(selectedAccount);
-    onClose();
-  };
-
-  const handleLogout = () => {
-    logout();
-    resetWalletId();
-    onClose();
-  };
-
-  const renderWalletList = () => (
-    <ul className="space-y-2">
-      {WALLETS.map(([id, { name, icon }]) => {
-        const isEnabled = wallets && id in wallets;
-        const accountsCount = getWalletAccounts(id as WalletId).length;
-
-        return (
-          <li key={id}>
-            <button
-              className={`btn btn-block ${isEnabled ? "btn-primary" : "btn-disabled"}`}
-              onClick={() => handleWalletClick(id as WalletId)}
-              disabled={!isEnabled}
-            >
-              <span className={`mr-2 ${icon}`}></span>
-              {name}
-              <span className="ml-auto text-sm">
-                {isEnabled ? `${accountsCount} account(s)` : "Disabled"}
-              </span>
-            </button>
-          </li>
-        );
-      })}
-    </ul>
-  );
-
-  const renderAccountList = () => (
-    <ul className="space-y-2">
-      {walletAccounts.map((acc: Account) => (
-        <li key={acc.address} className="flex items-center">
-          <button
-            className={`btn btn-block ${
-              acc.address === account?.address ? "btn-primary" : "btn-secondary"
-            }`}
-            onClick={() => handleAccountClick(acc)}
-          >
-            {acc.meta.name}
-          </button>
-        </li>
-      ))}
-    </ul>
-  );
 
   return (
     <div className="modal modal-open">
       <div className="modal-box">
-        <h3 className="font-bold text-lg mb-4">Wallet Connection</h3>
-        {isAccountReady ? (
-          wallet ? (
-            renderAccountList()
-          ) : (
-            renderWalletList()
-          )
+        <h3 className="font-bold text-lg">Select an account</h3>
+        {accounts.length === 0 ? (
+          <p>No accounts found. Please make sure your wallet is connected.</p>
         ) : (
-          <p>Loading...</p>
+          <ul>
+            {accounts.map((account) => (
+              <li key={account.address}>
+                <button onClick={() => handleAccountSelection(account)}>
+                  {account.meta.name} ({account.address.slice(0, 6)}...
+                  {account.address.slice(-4)})
+                </button>
+              </li>
+            ))}
+          </ul>
         )}
         <div className="modal-action">
-          {wallet && (
-            <button className="btn btn-outline" onClick={resetWalletId}>
-              Change Wallet
-            </button>
-          )}
-          {account && (
-            <button className="btn btn-error" onClick={handleLogout}>
-              Logout
-            </button>
-          )}
           <button className="btn" onClick={onClose}>
             Close
           </button>
