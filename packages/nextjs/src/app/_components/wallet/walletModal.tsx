@@ -1,6 +1,7 @@
-import { useAccount } from "@gear-js/react-hooks";
-import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
+import { Account, useAccount } from "@gear-js/react-hooks";
 import { decodeAddress } from "@gear-js/api";
+import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
+import { ApiPromise } from "@polkadot/api";
 import { web3FromSource } from "@polkadot/extension-dapp";
 
 type Props = {
@@ -13,25 +14,20 @@ export function WalletModal({ onClose, accounts }: Props) {
 
   const handleAccountSelection = async (account: InjectedAccountWithMeta) => {
     try {
-      const { signer } = await web3FromSource(account.meta.source);
+      const { meta } = account;
+      const injector = await web3FromSource(meta.source);
 
-      if (!signer) {
-        throw new Error("No signer found");
-      }
-
-      const gearAccount = {
-        address: account.address,
-        meta: account.meta,
-        type: account.type,
+      const gearAccount: Account = {
+        ...account, // This spreads all properties from InjectedAccountWithMeta
         decodedAddress: decodeAddress(account.address),
-        signer,
+        signer: injector.signer,
       };
 
       login(gearAccount);
       onClose();
     } catch (error) {
       console.error("Error selecting account:", error);
-      // Aquí podrías mostrar un mensaje de error al usuario
+      // You could show an error message to the user here
     }
   };
 
