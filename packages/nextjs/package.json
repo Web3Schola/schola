@@ -46,7 +46,6 @@
     "vercel": "^37.2.1"
   },
   "devDependencies": {
-    "@polkadot/types": "11.0.2",
     "@types/node": "22.0.0",
     "@types/react": "18.3.3",
     "@types/react-dom": "^18.3.0",
