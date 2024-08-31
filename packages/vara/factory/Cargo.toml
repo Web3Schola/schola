@@ -1,22 +1,43 @@
+[workspace]
+members = ["app", "client"]
+
 [package]
-name = "schola-trivia-factory"
+name = "trivia-factory"
 version = "0.1.0"
 edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+description = "A decentralized trivia game platform built on the Gear Protocol"
+license = "MIT"
+repository = "https://github.com/yourusername/trivia-factory"
 
 [dependencies]
-gstd = { git = "https://github.com/gear-tech/gear.git", tag = "v1.1.1", features = [
-    "debug",
-] }
-codec = { package = "parity-scale-codec", version = "3.6", default-features = false, features = [
+trivia-factory-app = { path = "app" }
+sails-rs = { version = "0.4.0", features = ["gtest"] }
+gstd = { version = "1.5.0", features = ["debug"] }
+codec = { package = "parity-scale-codec", version = "3.4.0", default-features = false, features = [
     "derive",
 ] }
-scale-info = { version = "2.9", default-features = false, features = [
-    "derive",
-] }
-gmeta = { git = "https://github.com/gear-tech/gear.git", tag = "v1.1.1" }
+gmeta = { version = "1.5.0" }
 
 [build-dependencies]
-gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", tag = "v1.1.1" }
+trivia-factory-app = { path = "app" }
+sails-rs = { version = "0.4.0", features = ["wasm-builder"] }
+sails-idl-gen = "0.4.0"
 
 [dev-dependencies]
-gtest = { git = "https://github.com/gear-tech/gear.git", tag = "v1.1.1" }
+trivia-factory = { path = ".", features = ["wasm-binary"] }
+trivia-factory-client = { path = "client" }
+sails-rs = { version = "0.4.0", features = ["gtest"] }
+tokio = { version = "1.39", features = ["rt", "macros", "rt-multi-thread"] }
+gtest = { version = "1.5.0" }
+
+[features]
+wasm-binary = []
+
+[[example]]
+name = "create_trivia"
+path = "examples/create_trivia.rs"
+
+[[example]]
+name = "play_trivia"
+path = "examples/play_trivia.rs"

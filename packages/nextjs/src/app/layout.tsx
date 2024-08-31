@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import cn from "classnames";
 import "./globals.css";
-import { ThemeSwitcher } from "./_components/theme-switcher";
+//import { ThemeSwitcher } from "./_components/theme-switcher";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,7 +29,7 @@ export default function RootLayout({
       >
         <Providers>
           <Navbar />
-          <ThemeSwitcher />
+          {/*<ThemeSwitcher />*/}
           <main>{children}</main>
           <Footer />
         </Providers>

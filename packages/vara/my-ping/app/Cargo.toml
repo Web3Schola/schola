@@ -1,7 +1,0 @@
-[package]
-name = "my-ping-app"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-sails-rs = "0.4.0"

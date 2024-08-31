@@ -7,15 +7,18 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "vercel": "vercel",
+    "vercel:yolo": "vercel --build-env NEXT_PUBLIC_IGNORE_BUILD_ERROR=true"
   },
   "dependencies": {
+    "@polkadot/api": "^12.0.1",
+    "@polkadot/extension-dapp": "^0.46.5",
+    "@polkadot/types": "^12.0.1",
     "@gear-js/api": "^0.38.2",
     "@gear-js/react-hooks": "^0.12.2",
     "@gear-js/ui": "0.5.26",
-    "@polkadot/api": "^12.4.2",
     "@polkadot/api-augment": "^12.4.2",
-    "@polkadot/extension-dapp": "0.46.5",
     "@polkadot/keyring": "^13.0.2",
     "@polkadot/networks": "^13.0.2",
     "@polkadot/react-identicon": "3.1.4",
@@ -39,10 +42,10 @@
     "rxjs": "7.8.1",
     "sails-js": "0.1.8",
     "sass": "1.69.1",
-    "tsc": "^2.0.4"
+    "tsc": "^2.0.4",
+    "vercel": "^37.2.1"
   },
   "devDependencies": {
-    "@polkadot/types": "11.0.2",
     "@types/node": "22.0.0",
     "@types/react": "18.3.3",
     "@types/react-dom": "^18.3.0",
