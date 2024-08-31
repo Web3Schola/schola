@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "vercel": "vercel",
+    "vercel:yolo": "vercel --build-env NEXT_PUBLIC_IGNORE_BUILD_ERROR=true"
   },
   "dependencies": {
     "@gear-js/api": "^0.38.2",
@@ -39,7 +41,8 @@
     "rxjs": "7.8.1",
     "sails-js": "0.1.8",
     "sass": "1.69.1",
-    "tsc": "^2.0.4"
+    "tsc": "^2.0.4",
+    "vercel": "^37.2.1"
   },
   "devDependencies": {
     "@polkadot/types": "11.0.2",
