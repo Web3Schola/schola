@@ -104,7 +104,7 @@ export default function CrearPregunta() {
 
         <div className="flex items-center justify-between">
           <div>
-            <a href="/next-question">
+            <a href="/next-question/">
               <button className="btn btn-lg mt-10 btn-glass mb-5">Next</button>
             </a>
           </div>
