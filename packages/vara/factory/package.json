@@ -7,7 +7,7 @@
     "clippy": "cargo clippy -- -D warnings",
     "fmt": "cargo fmt --all -- --check",
     "run-example": "cargo run --example",
-    "generate-js-client": "sails-js generate ./target/wasm32-unknown-unknown/release/trivia_factory.idl -o ../nextjs/src/contracts -n TriviaFactory"
+    "generate-js-client": "sails-js generate ./target/wasm32-unknown-unknown/release/trivia_factory.idl -o ../../nextjs/contracts -n TriviaFactory"
   },
   "dependencies": {
     "@gear-js/api": "^0.38.1",

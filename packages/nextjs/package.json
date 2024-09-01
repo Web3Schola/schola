@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "check-types": "tsc --noEmit",
+    "generate-js-client": "sails-js generate ./target/wasm32-unknown-unknown/release/trivia_factory.idl -o ../../packages/nextjs/src/contracts/lib -n TriviaFactory",
     "vercel": "vercel",
     "vercel:yolo": "vercel --build-env NEXT_PUBLIC_IGNORE_BUILD_ERROR=true"
   },
