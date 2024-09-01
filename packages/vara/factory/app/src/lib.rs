@@ -42,6 +42,7 @@ impl From<sails_rs::errors::Error> for TriviaError {
 pub struct TriviaFactoryState {
     trivias: Vec<Trivia>,
     owner: ActorId,
+    trivia_count: u32,
 }
 
 struct TriviaService {
@@ -64,6 +65,7 @@ impl TriviaService {
             state: TriviaFactoryState {
                 trivias: Vec::new(),
                 owner: msg::source(),
+                trivia_count: 0,
             },
         }
     }
@@ -81,7 +83,7 @@ impl TriviaService {
         msg::send(exec::program_id(), Vec::<u8>::new(), reward)
             .map_err(|_| TriviaError::RewardTransferFailed)?;
 
-        let index = self.state.trivias.len() as u32;
+        let index = self.state.trivia_count;
         self.state.trivias.push(Trivia {
             questions,
             correct_answers,
@@ -89,6 +91,7 @@ impl TriviaService {
             owner: msg::source(),
             is_completed: false,
         });
+        self.state.trivia_count += 1;
 
         self.notify_on(TriviaEvent::TriviaCreated { index })?;
         Ok(index) // Cambiado de Ok(()) a Ok(index)
@@ -151,7 +154,7 @@ impl TriviaService {
     }
 
     pub fn get_trivia_count(&self) -> u32 {
-        self.state.trivias.len() as u32
+        self.state.trivia_count
     }
 
     pub fn update_trivia(
