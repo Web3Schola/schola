@@ -1,6 +1,7 @@
 "use client";
 
 import { Wallet } from "./wallet";
+import Image from "next/image";
 
 export default function Navbar() {
   return (
@@ -41,7 +42,7 @@ export default function Navbar() {
       </div>
       <div className="navbar-center">
         <a href="/" className="btn btn-ghost normal-case text-xl">
-          Your Logo
+          <Image src="/navbar-logo.jpeg" height={50} width={50} alt="logo" />
         </a>
       </div>
       <div className="navbar-end">
