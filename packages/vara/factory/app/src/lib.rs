@@ -1,7 +1,7 @@
 #![no_std]
 
 use codec::{Decode, Encode};
-use core::fmt;
+//use core::fmt;
 use gstd::{errors::Result, exec, msg, prelude::*, ActorId};
 use sails_rs::prelude::*;
 use scale_info::TypeInfo;
@@ -12,6 +12,7 @@ pub struct Trivia {
     correct_answers: Vec<String>,
     reward: u128,
     owner: ActorId,
+    is_completed: bool,
 }
 
 #[derive(Debug, Encode, Decode, TypeInfo)]
@@ -22,6 +23,7 @@ pub enum TriviaError {
     Unauthorized,
     QuestionAnswerMismatch,
     NotificationFailed,
+    TriviaAlreadyCompleted,
 }
 
 impl fmt::Display for TriviaError {
@@ -71,7 +73,7 @@ impl TriviaService {
         questions: Vec<String>,
         correct_answers: Vec<String>,
         reward: u128,
-    ) -> Result<(), TriviaError> {
+    ) -> Result<u32, TriviaError> {
         if questions.len() != correct_answers.len() {
             return Err(TriviaError::QuestionAnswerMismatch);
         }
@@ -85,10 +87,11 @@ impl TriviaService {
             correct_answers,
             reward,
             owner: msg::source(),
+            is_completed: false,
         });
 
         self.notify_on(TriviaEvent::TriviaCreated { index })?;
-        Ok(())
+        Ok(index) // Cambiado de Ok(()) a Ok(index)
     }
 
     pub fn play_trivia(
@@ -99,19 +102,25 @@ impl TriviaService {
         let trivia = self
             .state
             .trivias
-            .get(trivia_index as usize)
+            .get_mut(trivia_index as usize)
             .ok_or(TriviaError::InvalidTriviaIndex)?;
+
+        if trivia.is_completed {
+            return Err(TriviaError::TriviaAlreadyCompleted);
+        }
 
         if answers.len() != trivia.correct_answers.len() {
             return Err(TriviaError::IncorrectAnswersCount);
         }
 
         let result = if answers == trivia.correct_answers {
-            msg::send::<Vec<u8>>(msg::source(), vec![], trivia.reward)
+            trivia.is_completed = true;
+            let reward = trivia.reward; // Guardamos el reward antes de soltar el préstamo
+            msg::send::<Vec<u8>>(msg::source(), vec![], reward)
                 .map_err(|_| TriviaError::RewardTransferFailed)?;
             self.notify_on(TriviaEvent::RewardPaid {
                 index: trivia_index,
-                amount: trivia.reward,
+                amount: reward,
             })?;
             "You won!".to_string()
         } else {
@@ -125,8 +134,12 @@ impl TriviaService {
         Ok(result)
     }
 
-    pub fn get_trivias(&self) -> Vec<Trivia> {
-        self.state.trivias.clone()
+    pub fn get_trivias(&self, index: u32) -> Result<Trivia, TriviaError> {
+        self.state
+            .trivias
+            .get(index as usize)
+            .cloned()
+            .ok_or(TriviaError::InvalidTriviaIndex)
     }
 
     pub fn get_trivia(&self, index: u32) -> Result<Trivia, TriviaError> {
