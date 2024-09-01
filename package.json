@@ -24,6 +24,7 @@
     "factory:test": "yarn workspace @sv/vara-factory test",
     "factory:clippy": "yarn workspace @sv/vara-factory clippy",
     "factory:fmt": "yarn workspace @sv/vara-factory fmt",
+    "factory:generate-client": "yarn workspace @sv/vara/factory generate-js-client",
     "factory:create-example": "yarn workspace @sv/vara-factory run-example create_trivia",
     "factory:play-example": "yarn workspace @sv/vara-factory run-example play_trivia"
   },

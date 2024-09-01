@@ -1,53 +1,106 @@
 "use client";
 
-import { SetStateAction, useState } from "react";
+import { useState, useEffect } from "react";
+import { GearApi } from "@gear-js/api";
+import { TriviaFactory, Trivia } from "../../../contracts/lib";
 
-const questions = [
-  {
-    question: "¿Cuál es la capital de Francia?",
-    options: ["Londres", "París", "Madrid", "Berlín"],
-    answer: "París",
-  },
-  // ... más preguntas aquí
-];
-
-export default function Trivia() {
+export default function PlayTrivia() {
+  const [triviaId, setTriviaId] = useState("");
+  const [trivia, setTrivia] = useState<Trivia | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [showResult, setShowResult] = useState(false);
+  const [result, setResult] = useState("");
+
+  const handleTriviaIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTriviaId(event.target.value);
+  };
+
+  const loadTrivia = async () => {
+    try {
+      const api = await GearApi.create();
+      const triviaFactory = new TriviaFactory(api);
+      const loadedTrivia = await triviaFactory.trivia.getTrivia(
+        Number(triviaId),
+      );
+      if ("ok" in loadedTrivia) {
+        setTrivia(loadedTrivia.ok);
+        setCurrentQuestion(0);
+        setSelectedAnswer("");
+        setShowResult(false);
+      } else {
+        console.error("Error loading trivia:", loadedTrivia.err);
+      }
+    } catch (error) {
+      console.error("Error loading trivia:", error);
+    }
+  };
 
   const handleAnswerClick = (answer: string) => {
     setSelectedAnswer(answer);
   };
 
-  const handleNextQuestion = () => {
-    if (selectedAnswer === questions[currentQuestion].answer) {
-      // Aquí puedes manejar la lógica de puntos o recompensas
-      console.log("¡Respuesta correcta!");
+  const handleNextQuestion = async () => {
+    if (!trivia) return;
+
+    if (currentQuestion === trivia.questions.length - 1) {
+      try {
+        const api = await GearApi.create();
+        const triviaFactory = new TriviaFactory(api);
+        const playResult = await triviaFactory.trivia
+          .playTrivia(Number(triviaId), [selectedAnswer])
+          .signAndSend();
+        if (
+          playResult &&
+          typeof playResult === "object" &&
+          "ok" in playResult
+        ) {
+          setResult(String(playResult.ok));
+        } else if (
+          playResult &&
+          typeof playResult === "object" &&
+          "err" in playResult
+        ) {
+          setResult(`Error: ${String(playResult.err)}`);
+        } else {
+          setResult("Unexpected result structure");
+        }
+        setShowResult(true);
+      } catch (error) {
+        console.error("Error playing trivia:", error);
+        setResult("Error playing trivia. Please try again.");
+      }
     } else {
-      console.log("Respuesta incorrecta");
-    }
-
-    setSelectedAnswer("");
-    setCurrentQuestion(currentQuestion + 1);
-
-    if (currentQuestion === questions.length - 1) {
-      setShowResult(true);
+      setCurrentQuestion(currentQuestion + 1);
+      setSelectedAnswer("");
     }
   };
 
   return (
     <div className="flex flex-col md:flex-row justify-center items-center min-h-screen bg-gray-100">
       <div className="w-full md:w-1/2 p-8">
-        <h1 className="text-3xl font-bold mb-6">Trivia</h1>
+        <h1 className="text-3xl font-bold mb-6">Play Trivia</h1>
 
-        {!showResult && (
+        <div className="mb-4">
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            type="number"
+            placeholder="Enter Trivia ID"
+            value={triviaId}
+            onChange={handleTriviaIdChange}
+          />
+          <button className="btn mt-2" onClick={loadTrivia}>
+            Load Trivia
+          </button>
+        </div>
+
+        {trivia && !showResult && (
           <>
             <h2 className="text-xl mb-4">
-              {questions[currentQuestion].question}
+              {trivia.questions[currentQuestion]}
             </h2>
             <ul>
-              {questions[currentQuestion].options.map((option, index) => (
+              {trivia.correct_answers.map((option, index) => (
                 <li
                   key={index}
                   className={`p-3 border rounded mb-2 cursor-pointer ${
@@ -65,9 +118,9 @@ export default function Trivia() {
                 className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4"
                 onClick={handleNextQuestion}
               >
-                {currentQuestion === questions.length - 1
-                  ? "Ver resultado"
-                  : "Siguiente pregunta"}
+                {currentQuestion === trivia.questions.length - 1
+                  ? "Submit Answers"
+                  : "Next Question"}
               </button>
             )}
           </>
@@ -75,14 +128,10 @@ export default function Trivia() {
 
         {showResult && (
           <div>
-            {/* Aquí puedes mostrar el resultado final de la trivia */}
-            <h2 className="text-2xl">¡Trivia terminada!</h2>
+            <h2 className="text-2xl">Trivia Result</h2>
+            <p>{result}</p>
           </div>
         )}
-      </div>
-
-      <div className="w-full md:w-1/2 p-8">
-        {/* Aquí puedes colocar imágenes, anuncios u otro contenido relacionado */}
       </div>
     </div>
   );
