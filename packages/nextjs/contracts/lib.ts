@@ -14,13 +14,15 @@ export type TriviaError =
   | "rewardTransferFailed"
   | "unauthorized"
   | "questionAnswerMismatch"
-  | "notificationFailed";
+  | "notificationFailed"
+  | "triviaAlreadyCompleted";
 
 export interface Trivia {
   questions: Array<string>;
   correct_answers: Array<string>;
   reward: number | string | bigint;
   owner: ActorId;
+  is_completed: boolean;
 }
 
 export class TriviaFactory {
@@ -40,6 +42,7 @@ export class TriviaFactory {
           "Unauthorized",
           "QuestionAnswerMismatch",
           "NotificationFailed",
+          "TriviaAlreadyCompleted",
         ],
       },
       Trivia: {
@@ -47,6 +50,7 @@ export class TriviaFactory {
         correct_answers: "Vec<String>",
         reward: "u128",
         owner: "[u8;32]",
+        is_completed: "bool",
       },
     };
 
@@ -95,15 +99,15 @@ export class Trivia {
     questions: Array<string>,
     correct_answers: Array<string>,
     reward: number | string | bigint,
-  ): TransactionBuilder<{ ok: null } | { err: TriviaError }> {
+  ): TransactionBuilder<{ ok: number } | { err: TriviaError }> {
     if (!this._program.programId) throw new Error("Program ID is not set");
-    return new TransactionBuilder<{ ok: null } | { err: TriviaError }>(
+    return new TransactionBuilder<{ ok: number } | { err: TriviaError }>(
       this._program.api,
       this._program.registry,
       "send_message",
       ["Trivia", "CreateTrivia", questions, correct_answers, reward],
       "(String, String, Vec<String>, Vec<String>, u128)",
-      "Result<Null, TriviaError>",
+      "Result<u32, TriviaError>",
       this._program.programId,
     );
   }
@@ -168,9 +172,7 @@ export class Trivia {
       .toHex();
     const reply = await this._program.api.message.calculateReply({
       destination: this._program.programId || "",
-      origin: originAddress
-        ? decodeAddress(originAddress)
-        : ZERO_ADDRESS.toString(),
+      origin: originAddress ? decodeAddress(originAddress) : ZERO_ADDRESS,
       payload,
       value: value || 0,
       gasLimit: this._program.api.blockGasLimit.toBigInt(),
@@ -217,12 +219,13 @@ export class Trivia {
   }
 
   public async getTrivias(
+    index: number,
     originAddress?: string,
     value?: number | string | bigint,
     atBlock?: `0x${string}`,
-  ): Promise<Array<Trivia>> {
+  ): Promise<{ ok: Trivia } | { err: TriviaError }> {
     const payload = this._program.registry
-      .createType("(String, String)", ["Trivia", "GetTrivias"])
+      .createType("(String, String, u32)", ["Trivia", "GetTrivias", index])
       .toHex();
     const reply = await this._program.api.message.calculateReply({
       destination: this._program.programId || "",
@@ -237,10 +240,12 @@ export class Trivia {
         this._program.registry.createType("String", reply.payload).toString(),
       );
     const result = this._program.registry.createType(
-      "(String, String, Vec<Trivia>)",
+      "(String, String, Result<Trivia, TriviaError>)",
       reply.payload,
     );
-    return result[2].toJSON() as unknown as Array<Trivia>;
+    return result[2].toJSON() as unknown as
+      | { ok: Trivia }
+      | { err: TriviaError };
   }
 
   public subscribeToTriviaCreatedEvent(
