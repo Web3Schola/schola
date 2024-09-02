@@ -44,13 +44,13 @@ export default function CrearPregunta() {
       // Inicializar TriviaFactory (asegúrate de tener el ID del programa correcto)
       const triviaFactory = new TriviaFactory(
         api,
-        "0xbc8087ea07aa3de19bc73b0e75ac710f4258a681ab98268a8f8f5f227d7f35ab",
+        "0xe505fd950e5ba2670d2ca36754bb55d389914731461e260f727961cb24dfb3f7",
       );
 
       const questions = preguntas.map((p) => p.pregunta);
       const answers = preguntas.map((p) => p.respuestaCorrecta);
 
-      const result = await triviaFactory.trivia
+      const result = await triviaFactory.triviaFactory
         .createTrivia(questions, answers, BigInt(reward))
         .signAndSend(); // Asegúrate de manejar la firma de la transacción
 

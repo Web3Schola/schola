@@ -2,11 +2,17 @@
 
 import { useState, useEffect } from "react";
 import { GearApi } from "@gear-js/api";
-import { TriviaFactory, Trivia } from "../../../contracts/lib";
+import { TriviaFactory, TriviaFactoryService } from "../../../contracts/lib";
+
+type TriviaData = {
+  questions: string[];
+  reward: string | number | bigint;
+  completed: boolean;
+};
 
 export default function PlayTrivia() {
   const [triviaId, setTriviaId] = useState("");
-  const [trivia, setTrivia] = useState<Trivia | null>(null);
+  const [trivia, setTrivia] = useState<TriviaData | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [showResult, setShowResult] = useState(false);
@@ -20,11 +26,12 @@ export default function PlayTrivia() {
     try {
       const api = await GearApi.create();
       const triviaFactory = new TriviaFactory(api);
-      const loadedTrivia = await triviaFactory.trivia.getTrivia(
+      const loadedTrivia = await triviaFactory.triviaFactory.getTrivia(
         Number(triviaId),
       );
       if ("ok" in loadedTrivia) {
-        setTrivia(loadedTrivia.ok);
+        const [questions, reward, completed] = loadedTrivia.ok;
+        setTrivia({ questions, reward, completed });
         setCurrentQuestion(0);
         setSelectedAnswer("");
         setShowResult(false);
@@ -47,7 +54,7 @@ export default function PlayTrivia() {
       try {
         const api = await GearApi.create();
         const triviaFactory = new TriviaFactory(api);
-        const playResult = await triviaFactory.trivia
+        const playResult = await triviaFactory.triviaFactory
           .playTrivia(Number(triviaId), [selectedAnswer])
           .signAndSend();
         if (
@@ -100,7 +107,7 @@ export default function PlayTrivia() {
               {trivia.questions[currentQuestion]}
             </h2>
             <ul>
-              {trivia.correct_answers.map((option, index) => (
+              {trivia.questions.map((option, index) => (
                 <li
                   key={index}
                   className={`p-3 border rounded mb-2 cursor-pointer ${
