@@ -62,15 +62,14 @@ export class TriviaFactoryService {
   public createTrivia(
     questions: Array<string>,
     correct_answers: Array<string>,
-    reward: number | string | bigint,
   ): TransactionBuilder<{ ok: number } | { err: string }> {
     if (!this._program.programId) throw new Error("Program ID is not set");
     return new TransactionBuilder<{ ok: number } | { err: string }>(
       this._program.api,
       this._program.registry,
       "send_message",
-      ["TriviaFactory", "CreateTrivia", questions, correct_answers, reward],
-      "(String, String, Vec<String>, Vec<String>, u128)",
+      ["TriviaFactory", "CreateTrivia", questions, correct_answers],
+      "(String, String, Vec<String>, Vec<String>)",
       "Result<u32, String>",
       this._program.programId,
     );
