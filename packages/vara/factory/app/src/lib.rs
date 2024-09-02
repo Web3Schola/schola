@@ -1,7 +1,8 @@
 #![no_std]
+
+use gprimitives::ActorId;
 use sails_rs::{collections::HashMap, gstd::msg, prelude::*};
 
-// Estructura para una trivia individual
 #[derive(Encode, Decode, TypeInfo, Clone)]
 pub struct Trivia {
     questions: Vec<String>,
@@ -11,7 +12,6 @@ pub struct Trivia {
     is_completed: bool,
 }
 
-// Estado global del contrato
 pub struct State {
     trivias: HashMap<u32, Trivia>,
     trivia_count: u32,
@@ -53,10 +53,14 @@ impl TriviaFactory {
         &mut self,
         questions: Vec<String>,
         correct_answers: Vec<String>,
-        reward: u128,
     ) -> Result<u32, String> {
         if questions.len() != correct_answers.len() {
             return Err("Questions and answers count mismatch".into());
+        }
+
+        let reward = msg::value();
+        if reward == 0 {
+            return Err("No reward provided".into());
         }
 
         let state = State::get_mut();
@@ -100,7 +104,9 @@ impl TriviaFactory {
 
         if answers == trivia.correct_answers {
             trivia.is_completed = true;
-            let _ = msg::send(msg::source(), Vec::<u8>::new(), trivia.reward);
+            msg::send(msg::source(), Vec::<u8>::new(), trivia.reward)
+                .map_err(|_| "Failed to send reward")?;
+
             let _ = self.notify_on(TriviaEvent::TriviaCompleted {
                 id: trivia_id,
                 winner: msg::source(),

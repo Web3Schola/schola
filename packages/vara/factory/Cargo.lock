@@ -5315,6 +5315,7 @@ name = "trivia-factory-app"
 version = "0.1.0"
 dependencies = [
  "gmeta",
+ "gprimitives",
  "gstd",
  "parity-scale-codec",
  "sails-rs",

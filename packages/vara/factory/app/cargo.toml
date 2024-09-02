@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 sails-rs = "0.4.0"
+gprimitives = "1.5.0"
 gstd = { version = "1.5.0", features = ["debug"] }
 codec = { package = "parity-scale-codec", version = "3.4.0", default-features = false, features = [
     "derive",
