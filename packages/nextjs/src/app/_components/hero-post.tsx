@@ -23,6 +23,9 @@ export function HeroPost({
 }: Props) {
   return (
     <section>
+      <h2 className="mb-8 text-5xl md:text-7xl font-bold tracking-tighter leading-tight">
+        About Schola
+      </h2>
       <div className="mb-8 md:mb-16">
         <CoverImage title={title} src={coverImage} slug={slug} />
       </div>

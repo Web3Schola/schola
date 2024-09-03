@@ -4,9 +4,10 @@ import { Intro } from "@/app/_components/intro";
 import { MoreStories } from "@/app/_components/more-stories";
 import { getAllPosts } from "@/lib/api";
 import { Card } from "@/app/_components/Card";
+import Subscribe from "@/app/_components/subscribe";
+import Deck from "@/app/_components/deck";
 export default function Index() {
   const allPosts = getAllPosts();
-
   const heroPost = allPosts[0];
 
   const morePosts = allPosts.slice(1);
@@ -15,6 +16,7 @@ export default function Index() {
     <main>
       <Container>
         <Intro />
+        <Card />
         <HeroPost
           title={heroPost.title}
           coverImage={heroPost.coverImage}
@@ -23,9 +25,10 @@ export default function Index() {
           slug={heroPost.slug}
           excerpt={heroPost.excerpt}
         />
-        <Card />
         {morePosts.length > 0 && <MoreStories posts={morePosts} />}
       </Container>
+      <Subscribe />
+      <Deck />
     </main>
   );
 }
