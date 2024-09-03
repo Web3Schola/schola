@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { TriviaFactory } from "../../../contracts/lib"; // Asegúrate de que la ruta sea correcta
-import { GearApi } from "@gear-js/api";
+import { GearApi, GasInfo } from "@gear-js/api";
+import { useAccount } from "@gear-js/react-hooks";
 
 export default function CrearPregunta() {
   const [preguntas, setPreguntas] = useState([
@@ -12,14 +13,22 @@ export default function CrearPregunta() {
   const [reward, setReward] = useState("");
   const [triviaId, setTriviaId] = useState<number | null>(null);
   const router = useRouter();
+  const { account } = useAccount();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handlePreguntaChange = (index: number, event: any) => {
+  const handlePreguntaChange = (
+    index: number,
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const nuevasPreguntas = [...preguntas];
     nuevasPreguntas[index].pregunta = event.target.value;
     setPreguntas(nuevasPreguntas);
   };
 
-  const handleRespuestaCorrectaChange = (index: number, event: any) => {
+  const handleRespuestaCorrectaChange = (
+    index: number,
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const nuevasPreguntas = [...preguntas];
     nuevasPreguntas[index].respuestaCorrecta = event.target.value;
     setPreguntas(nuevasPreguntas);
@@ -29,19 +38,22 @@ export default function CrearPregunta() {
     setPreguntas([...preguntas, { pregunta: "", respuestaCorrecta: "" }]);
   };
 
-  const handleRewardChange = (event: any) => {
+  const handleRewardChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setReward(event.target.value);
   };
 
-  const handleSubmit = async (event: any) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!account) {
+      alert("Please connect your wallet first");
+      return;
+    }
+    setIsLoading(true);
     try {
-      // Inicializar GearApi (asegúrate de tener la URL correcta del nodo)
       const api = await GearApi.create({
         providerAddress: "wss://testnet.vara.network",
       });
 
-      // Inicializar TriviaFactory (asegúrate de tener el ID del programa correcto)
       const triviaFactory = new TriviaFactory(
         api,
         "0xf5691c64eed986728bc5a263851b78ba867522289078b07ade779ca25f711b8b",
@@ -50,37 +62,63 @@ export default function CrearPregunta() {
       const questions = preguntas.map((p) => p.pregunta);
       const answers = preguntas.map((p) => p.respuestaCorrecta);
 
-      const result = await triviaFactory.triviaFactory
-        .createTrivia(questions, answers)
-        .signAndSend(); // Asegúrate de manejar la firma de la transacción
-
-      // Suponiendo que el resultado contiene el ID de la trivia creada
-      if (result && typeof result === "object" && "ok" in result) {
-        const okResult = result.ok;
-        if (typeof okResult === "number") {
-          setTriviaId(okResult);
-        }
+      if (!triviaFactory.programId) {
+        throw new Error("Program ID is not set");
       }
+
+      const gasLimit = await api.program.calculateGas.initCreate(
+        account.decodedAddress,
+        triviaFactory.programId,
+        "createTrivia",
+        { questions, answers },
+        0,
+        true,
+      );
+
+      const { extrinsic } = await triviaFactory.triviaFactory.createTrivia(
+        questions,
+        answers,
+      );
+
+      const signedExtrinsic = await extrinsic.signAndSend(
+        account.decodedAddress,
+      );
+
+      await new Promise<void>((resolve) => {
+        signedExtrinsic.once("InBlock", () => {
+          resolve();
+        });
+      });
+
+      const triviaCreatedEvent = await new Promise<{ id: number }>(
+        (resolve) => {
+          triviaFactory.triviaFactory.subscribeToTriviaCreatedEvent((event) => {
+            if ("id" in event) {
+              resolve(event as { id: number });
+            }
+          });
+        },
+      );
+
+      setTriviaId(triviaCreatedEvent.id);
       const modalElement = document.getElementById(
         "my_modal_1",
       ) as HTMLDialogElement;
       if (modalElement) {
         modalElement.showModal();
-      } else if (result && typeof result === "object" && "err" in result) {
-        console.error("Error creating trivia:", result.err);
-      } else {
-        console.error("Unexpected result structure:", result);
       }
     } catch (error) {
       console.error("Error creating trivia:", error);
+      alert("Error creating trivia. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="container mx-auto p-8 ">
+    <div className="container mx-auto p-8">
       <div className="grid grid-cols-2">
         <h1 className="text-3xl font-bold mb-6">Create new trivia</h1>
-        <button className="btn justify-self-end">Fund a trivia game</button>
       </div>
 
       <form
@@ -155,8 +193,12 @@ export default function CrearPregunta() {
           >
             Add Question
           </button>
-          <button type="submit" className="btn btn-lg mt-10 btn-glass mb-5">
-            Create Trivia
+          <button
+            type="submit"
+            className="btn btn-lg mt-10 btn-glass mb-5"
+            disabled={isLoading}
+          >
+            {isLoading ? "Creating Trivia..." : "Create Trivia"}
           </button>
         </div>
       </form>
