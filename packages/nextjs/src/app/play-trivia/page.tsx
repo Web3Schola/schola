@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { GearApi } from "@gear-js/api";
-import { TriviaFactory, TriviaFactoryService } from "../../../contracts/lib";
+import { TriviaFactory } from "../../../contracts/lib";
+import { useAccount } from "@gear-js/react-hooks";
 
 type TriviaData = {
   questions: string[];
@@ -14,18 +15,26 @@ export default function PlayTrivia() {
   const [triviaId, setTriviaId] = useState("");
   const [trivia, setTrivia] = useState<TriviaData | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState("");
+  const [answers, setAnswers] = useState<string[]>([]);
   const [showResult, setShowResult] = useState(false);
   const [result, setResult] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { account } = useAccount();
 
   const handleTriviaIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTriviaId(event.target.value);
   };
 
   const loadTrivia = async () => {
+    setIsLoading(true);
     try {
-      const api = await GearApi.create();
-      const triviaFactory = new TriviaFactory(api);
+      const api = await GearApi.create({
+        providerAddress: "wss://testnet.vara.network",
+      });
+      const triviaFactory = new TriviaFactory(
+        api,
+        "0xf5691c64eed986728bc5a263851b78ba867522289078b07ade779ca25f711b8b",
+      );
       const loadedTrivia = await triviaFactory.triviaFactory.getTrivia(
         Number(triviaId),
       );
@@ -33,53 +42,79 @@ export default function PlayTrivia() {
         const [questions, reward, completed] = loadedTrivia.ok;
         setTrivia({ questions, reward, completed });
         setCurrentQuestion(0);
-        setSelectedAnswer("");
+        setAnswers(new Array(questions.length).fill(""));
         setShowResult(false);
       } else {
         console.error("Error loading trivia:", loadedTrivia.err);
+        setResult(`Error: ${loadedTrivia.err}`);
+        setShowResult(true);
       }
     } catch (error) {
       console.error("Error loading trivia:", error);
+      setResult("Error loading trivia. Please try again.");
+      setShowResult(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleAnswerClick = (answer: string) => {
-    setSelectedAnswer(answer);
+  const handleAnswerChange = (answer: string, index: number) => {
+    const newAnswers = [...answers];
+    newAnswers[index] = answer;
+    setAnswers(newAnswers);
   };
 
-  const handleNextQuestion = async () => {
-    if (!trivia) return;
+  const handleSubmit = async () => {
+    if (!account) {
+      alert("Please connect your wallet first");
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const api = await GearApi.create({
+        providerAddress: "wss://testnet.vara.network",
+      });
+      const triviaFactory = new TriviaFactory(
+        api,
+        "0xf5691c64eed986728bc5a263851b78ba867522289078b07ade779ca25f711b8b",
+      );
 
-    if (currentQuestion === trivia.questions.length - 1) {
-      try {
-        const api = await GearApi.create();
-        const triviaFactory = new TriviaFactory(api);
-        const playResult = await triviaFactory.triviaFactory
-          .playTrivia(Number(triviaId), [selectedAnswer])
-          .signAndSend();
-        if (
-          playResult &&
-          typeof playResult === "object" &&
-          "ok" in playResult
-        ) {
-          setResult(String(playResult.ok));
+      const playTriviaMessage = triviaFactory.triviaFactory.playTrivia(
+        Number(triviaId),
+        answers,
+      );
+
+      await playTriviaMessage.withAccount(account.decodedAddress);
+      await playTriviaMessage.calculateGas();
+
+      const result = await playTriviaMessage.signAndSend();
+
+      const isFinalized = await result.isFinalized;
+
+      if (isFinalized) {
+        const response = await result.response();
+        if (response && typeof response === "object" && "ok" in response) {
+          setResult(String(response.ok));
         } else if (
-          playResult &&
-          typeof playResult === "object" &&
-          "err" in playResult
+          response &&
+          typeof response === "object" &&
+          "err" in response
         ) {
-          setResult(`Error: ${String(playResult.err)}`);
+          setResult(`Error: ${String(response.err)}`);
         } else {
           setResult("Unexpected result structure");
         }
         setShowResult(true);
-      } catch (error) {
-        console.error("Error playing trivia:", error);
-        setResult("Error playing trivia. Please try again.");
+      } else {
+        setResult("Transaction was not finalized");
+        setShowResult(true);
       }
-    } else {
-      setCurrentQuestion(currentQuestion + 1);
-      setSelectedAnswer("");
+    } catch (error) {
+      console.error("Error playing trivia:", error);
+      setResult("Error playing trivia. Please try again.");
+      setShowResult(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -96,46 +131,64 @@ export default function PlayTrivia() {
             value={triviaId}
             onChange={handleTriviaIdChange}
           />
-          <button className="btn mt-2" onClick={loadTrivia}>
-            Load Trivia
+          <button
+            className="btn mt-2"
+            onClick={loadTrivia}
+            disabled={isLoading}
+          >
+            {isLoading ? "Loading..." : "Load Trivia"}
           </button>
         </div>
 
         {trivia && !showResult && (
           <>
             <h2 className="text-xl mb-4">
+              Question {currentQuestion + 1}:{" "}
               {trivia.questions[currentQuestion]}
             </h2>
-            <ul>
-              {trivia.questions.map((option, index) => (
-                <li
-                  key={index}
-                  className={`p-3 border rounded mb-2 cursor-pointer ${
-                    selectedAnswer === option ? "bg-blue-500 text-white" : ""
-                  }`}
-                  onClick={() => handleAnswerClick(option)}
-                >
-                  {option}
-                </li>
-              ))}
-            </ul>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
+              type="text"
+              placeholder="Your answer"
+              value={answers[currentQuestion]}
+              onChange={(e) =>
+                handleAnswerChange(e.target.value, currentQuestion)
+              }
+            />
 
-            {selectedAnswer && (
+            <div className="flex justify-between">
               <button
-                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4"
-                onClick={handleNextQuestion}
+                className="btn"
+                onClick={() =>
+                  setCurrentQuestion(Math.max(0, currentQuestion - 1))
+                }
+                disabled={currentQuestion === 0}
               >
-                {currentQuestion === trivia.questions.length - 1
-                  ? "Submit Answers"
-                  : "Next Question"}
+                Previous
               </button>
-            )}
+              {currentQuestion < trivia.questions.length - 1 ? (
+                <button
+                  className="btn"
+                  onClick={() => setCurrentQuestion(currentQuestion + 1)}
+                >
+                  Next
+                </button>
+              ) : (
+                <button
+                  className="btn bg-green-500 hover:bg-green-700 text-white font-bold"
+                  onClick={handleSubmit}
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Submitting..." : "Submit Answers"}
+                </button>
+              )}
+            </div>
           </>
         )}
 
         {showResult && (
           <div>
-            <h2 className="text-2xl">Trivia Result</h2>
+            <h2 className="text-2xl mb-4">Trivia Result</h2>
             <p>{result}</p>
           </div>
         )}
