@@ -1,18 +1,20 @@
 import { sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const email = searchParams.get("email");
-  const name = searchParams.get("name");
+export async function POST(request: Request) {
+  const { email, name } = await request.json();
 
   try {
     if (!email) throw new Error("Se requiere un email");
-    await sql`INSERT INTO Leads (Email) VALUES (${email}), INSERT INTO Leads(name) VALUES(${name});`;
+    await sql`INSERT INTO Leads (Email, name) VALUES (${email}, ${name});`;
+    return NextResponse.json(
+      { message: "Lead añadido con éxito" },
+      { status: 200 },
+    );
   } catch (error) {
-    return NextResponse.json({ error }, { status: 500 });
+    return NextResponse.json(
+      { error: "Error al añadir el lead" },
+      { status: 500 },
+    );
   }
-
-  const leads = await sql`SELECT * FROM Leads;`;
-  return NextResponse.json({ leads }, { status: 200 });
 }
