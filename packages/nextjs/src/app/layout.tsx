@@ -10,6 +10,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.schola.space"),
   title: `Schola `,
   description: `A modular framework for continous education built on VARA network.`,
   openGraph: {
