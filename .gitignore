@@ -23,4 +23,6 @@ nextjs_app.txt
 # cli
 dist
 .vercel
-*.env*.local
+.env*.local
+# nextjs environment variables
+/packages/nextjs/.env
