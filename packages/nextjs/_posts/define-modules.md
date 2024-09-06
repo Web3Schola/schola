@@ -1,7 +1,7 @@
 ---
-title: "Markdown for Learning"
-excerpt: "Unleash Your Learning Potential with Markdown "
-coverImage: "/assets/blog/code-previews/cover.jpg"
+title: "Create your course using Markdown for Learning"
+excerpt: "Unleash what you can teach with Markdown. This is something you will get used to very easily, and will make your content accesible in Schola."
+coverImage: "/assets/blog/define-modules/cover.jpg"
 date: "2020-03-16T05:35:07.322Z"
 author:
   name: ATV
@@ -28,3 +28,48 @@ An .md file, or Markdown, is a plain text format that allows you to format your 
 There are no limits to what you can create and learn with .md files! Our application gives you the freedom to explore and experiment with this versatile format, enhancing your creativity and communication skills.
 
 **Start creating today and discover the power of learning with Markdown!**
+---
+Here's a showcase of what syntax will allow you to do:
+# Heading 1
+## Heading 2
+### Heading 3
+
+**Bold text**
+*Italic text*
+~~Strikethrough text~~
+
+- Unordered list item 1
+- Unordered list item 2
+  - Nested item
+
+1. Ordered list item 1
+2. Ordered list item 2
+
+```
+$E = mc^2$
+```
+
+[Link to Schola](https://schola.com)
+
+![Alt text for an image](/path/to/image.jpg)
+
+> This is a blockquote
+
+`Inline code`
+
+```python
+def hello_world():
+    print("Hello, Schola!")
+```
+
+| Column 1 | Column 2 |
+|----------|----------|
+| Row 1    | Data     |
+| Row 2    | Data     |
+
+- [ ] Task 1
+- [x] Task 2 (completed)
+
+---
+
+This is a horizontal rule

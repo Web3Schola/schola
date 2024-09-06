@@ -1,13 +1,13 @@
 ---
 title: "About Schola"
-excerpt: "Deep Dive into our commitment to make education better."
+excerpt: "Schola is committed to creating a world where learning is accessible to everyone, motivating and rewarding, and a catalyst for both personal and professional growth."
 coverImage: "/assets/blog/about-schola/cover.jpg"
 date: "2020-03-16T05:35:07.322Z"
 author:
-  name: D9J9V
-  picture: "/assets/blog/authors/d9j9v.jpg"
+  name: ATV
+  picture: "/assets/blog/authors/avatar-1.jpeg"
 ogImage:
-  url: "/assets/blog/code-previews/cover.jpg"
+  url: "/assets/blog/intro/cover.jpg"
 ---
 # Schola 🚀
 
