@@ -5,7 +5,7 @@ import Image from "next/image";
 export default function Deck() {
   const deckImages = Array.from(
     { length: 11 },
-    (_, i) => `/deck/${(i + 1).toString().padStart(2, "0")}.jpeg`,
+    (_, i) => `/deck/${(i + 1).toString().padStart(2, "0")}.jpg`,
   );
   const [currentSlide, setCurrentSlide] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
