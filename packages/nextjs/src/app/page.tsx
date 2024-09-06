@@ -9,22 +9,22 @@ import Deck from "@/app/_components/deck";
 
 export default function Index() {
   const allPosts = getAllPosts();
-  const heroPost = allPosts[0];
-  const morePosts = allPosts.slice(1);
+  //const heroPost = allPosts[0];
+  const morePosts = allPosts.slice(0);
 
   return (
     <main>
       <Container>
         <Intro />
         <Card />
-        <HeroPost
+        {/*<HeroPost
           title={heroPost.title}
           coverImage={heroPost.coverImage}
           date={heroPost.date}
           author={heroPost.author}
           slug={heroPost.slug}
           excerpt={heroPost.excerpt}
-        />
+        />*/}
         {morePosts.length > 0 && <MoreStories posts={morePosts} />}
       </Container>
       <Subscribe />
