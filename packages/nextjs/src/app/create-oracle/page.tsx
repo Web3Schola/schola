@@ -11,7 +11,7 @@ import { LoadingIcon } from "@/app/_components/icons";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-export default function Chat() {
+function Chat() {
   const [toolCall, setToolCall] = useState<string>();
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
     useChat({
@@ -60,8 +60,8 @@ export default function Chat() {
     .slice(-1)[0];
 
   return (
-    <div className="flex justify-center items-start sm:pt-16 min-h-screen w-full dark:bg-neutral-900 px-4 md:px-0 py-4">
-      <div className="flex flex-col items-center w-full max-w-[500px]">
+    <div className="w-full">
+      <div className="flex flex-col items-center w-full">
         <motion.div
           animate={{
             minHeight: isExpanded ? 200 : 0,
@@ -179,3 +179,53 @@ const MemoizedReactMarkdown: React.FC<Options> = React.memo(
     prevProps.children === nextProps.children &&
     prevProps.className === nextProps.className,
 );
+
+export default function CreateOracle() {
+  return (
+    <div className="flex flex-col min-h-screen w-full dark:bg-neutral-900 px-4 md:px-8 py-8">
+      <h1 className="text-5xl md:text-7xl font-bold tracking-tighter leading-tight mb-16 text-center">
+        Train and try your Schola oracle
+      </h1>
+      <div className="flex flex-col lg:flex-row justify-start items-start w-full gap-12 lg:gap-16">
+        <div className="w-full lg:w-1/2 flex flex-col">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-center lg:text-left">
+              Train Your Oracle
+            </h2>
+            <div className="bg-yellow-50 border border-yellow-100 rounded-lg p-4 mb-4">
+              <p className="text-yellow-800 text-sm">
+                Teach your oracle by providing information. This will help it
+                learn and provide better answers to your students.
+              </p>
+            </div>
+          </motion.div>
+          <Chat />
+        </div>
+
+        <div className="w-full lg:w-1/2 flex flex-col">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-center lg:text-left">
+              Preview Student View
+            </h2>
+            <div className="bg-yellow-50 border border-yellow-100 rounded-lg p-4 mb-4">
+              <p className="text-yellow-800 text-sm">
+                This is how your students will interact with the oracle. Try
+                asking questions to see how it responds based on what
+                you&apos;ve taught it.
+              </p>
+            </div>
+          </motion.div>
+          <Chat />
+        </div>
+      </div>
+    </div>
+  );
+}
