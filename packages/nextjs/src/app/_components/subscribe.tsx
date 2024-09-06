@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { saveEmailToDatabase } from "../../lib/register-email";
+import { motion } from "framer-motion";
 
 export default function Subscribe() {
   const [email, setEmail] = useState("");
@@ -18,59 +19,76 @@ export default function Subscribe() {
   };
 
   return (
-    <div className="hero bg-base-200 min-h-screen">
-      <div className="hero-content flex-col lg:flex-row-reverse">
-        <div className="text-center lg:text-left">
-          <h1 className="text-5xl font-bold">Try now!</h1>
-          <p className="py-6">
-            Launch your online course today! Our platform provides all the tools
-            you need to create, and sell your expertise. We make it easy to turn
-            your knowledge into a online business. Don&apos;t wait — start
-            monetizing your skills now!
+    <div className="hero bg-gradient-to-br from-blue-100 to-purple-100 py-20">
+      <div className="hero-content flex-col lg:flex-row-reverse gap-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center lg:text-left max-w-md"
+        >
+          <h1 className="text-5xl font-bold text-blue-800 mb-6">
+            Elevate Your Expertise
+          </h1>
+          <p className="text-lg text-gray-700 leading-relaxed">
+            Transform your knowledge into a thriving online course. Our platform
+            provides all the tools you need to create, market, and sell your
+            expertise. Start your journey to becoming a successful online
+            educator today!
           </p>
-        </div>
-        <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+          className="card bg-white w-full max-w-sm shrink-0 shadow-xl"
+        >
           <form className="card-body" onSubmit={handleSaveEmailAndShowToast}>
+            <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
+              Book Your Free Demo
+            </h2>
             <div className="form-control">
-              <label className="label">
-                <span className="label-text">Email</span>
-              </label>
               <input
                 type="email"
-                placeholder="email"
-                className="input input-bordered"
+                placeholder="Your Email"
+                className="input input-bordered bg-gray-50 focus:bg-white transition-colors"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Name</span>
-              </label>
+            <div className="form-control mt-4">
               <input
                 type="text"
-                placeholder="name"
-                className="input input-bordered"
+                placeholder="Your Name"
+                className="input input-bordered bg-gray-50 focus:bg-white transition-colors"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
             <div className="form-control mt-6">
-              <button type="submit" className="btn btn-primary">
-                Book demo
+              <button
+                type="submit"
+                className="btn btn-primary bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                Start Your Journey
               </button>
             </div>
           </form>
-        </div>
+        </motion.div>
       </div>
       {showToast && (
-        <div className="toast toast-top toast-center">
-          <div className="alert alert-success">
-            <span>Email registrado con éxito!</span>
+        <motion.div
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -50 }}
+          className="toast toast-top toast-center"
+        >
+          <div className="alert alert-success bg-green-500 text-white">
+            <span>Successfully registered! We&apos;ll be in touch soon.</span>
           </div>
-        </div>
+        </motion.div>
       )}
     </div>
   );
