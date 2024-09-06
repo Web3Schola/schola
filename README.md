@@ -1,10 +1,10 @@
 # 🏗 Scaffold-Schola
 
-🚧** WORK IN PROGRESS**🚧
-This is part of the Schola framework, a decentralized education platform that allows students to earn tokens for completing tests. This repository contains the smart contracts and the front-end for the platform.
+🚧** WORK IN PROGRESS**🚧  
+This is part of the Schola framework, a decentralized education platform that allows students to earn tokens for completing tests. This repository contains the smart contracts and the front-end for the platform.  
 
 We are working in a more general version of the platform, called [Scaffold-Vara](https://github.com/Web3Schola/scaffold-vara). We took inspiration from the original Scaffold-ETH repository.
-Scaffold-Vara, and also Schola's Repository are designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts.
+Scaffold-Vara, and also Schola's Repository are designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts.  
 
 ⚙️ Built using NextJS, Gear-js, Sails, Polkadot-js, DaisyUI and Typescript.
 
