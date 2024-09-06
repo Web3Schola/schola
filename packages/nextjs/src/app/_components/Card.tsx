@@ -9,7 +9,7 @@ export function Card() {
       subtitle: "Write as many Markdown files as you like.",
       image: "/images/t-1.jpg",
       buttonText: "Write yours",
-      link: "/define-modules",
+      link: "/posts/define-modules",
     },
     {
       title: "Feed your own AI oracle",
