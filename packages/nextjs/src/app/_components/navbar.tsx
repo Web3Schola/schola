@@ -32,10 +32,10 @@ export default function Navbar() {
               <a href="/posts/about-schola">About</a>
             </li>
             <li>
-              <a href="">Demo</a>
+              <a href="/create-trivia/">Create a Trivia</a>
             </li>
             <li>
-              <a href="">Get started</a>
+              <a href="/play-trivia/">Play Trivia</a>
             </li>
           </ul>
         </div>
@@ -50,10 +50,10 @@ export default function Navbar() {
             <a href="/posts/about-schola">About</a>
           </li>
           <li>
-            <a href="">Demo</a>
+            <a href="/create-trivia/">Create Trivia</a>
           </li>
           <li>
-            <a href="">Get started</a>
+            <a href="/play-trivia/">Play Trivia</a>
           </li>
         </ul>
       </div>
